@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: densityAPI
+  description: Api for retrieving density info 
+
+paths:
+  /api/v1/densitys:
+    x-router-controller: densityController
+    get:
+      description: Returns all densitys
+      operationId: getDensitys
+      responses:
+        200:
+          description: Density list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/density'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /api/v1/densitys/{year}:
+    x-router-controller: densityController
+    get:
+      description: Returns a single density by its year
+      operationId: findByyear
+      parameters:
+        - required: true
+          name: year
+          description: year of the density to fetch
+          in: path
+          schema:
+            type: number
+      responses:
+        200:
+          description: Density found by year
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/density'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+components:
+  schemas:
+    density:
+        type: object
+        required:
+          - year
+        properties:
+          year:
+            type: number
+          province:
+            type: string
+          gender:
+            type: string
+          municipality_size_lt_ft:
+            type: number
+          municipality_size_bt_ft_tht:
+            type: number
+          municipality_size_gt_tht:
+            type: number
+          capital_size:
+            type: number
+    error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+      additionalProperties: true
